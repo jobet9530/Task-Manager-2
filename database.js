@@ -113,6 +113,23 @@ export const useDatabase = () => {
     }
   }
 
-  return { tableUser, addTask, getTasks, deleteTask, updateTask };
+  const getUser = (email, password) => {
+   return new Promise((resolve, reject) => {
+     db.transaction((tx) => {
+       tx.executeSql(
+         "SELECT * FROM User WHERE email = ? AND password = ?",
+         [email, password],
+         (_, { rows }) => {
+           resolve(rows);
+         },
+         (_, error) => {
+           reject(error);
+         }
+       );
+     });  
+   }) 
+  }
+
+  return { tableUser, addTask, getTasks, deleteTask, updateTask, getUser };
 
 };
